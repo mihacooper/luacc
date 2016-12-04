@@ -11,7 +11,7 @@ parser:argument("main", "Main file of project")
 parser:argument("modules", "Secondary files of project"):args("*")
 parser:option("-o --output", "Output file"):count(1)
 parser:option("-i --include", "Include directory path"):count('*')
-parser:option("--left-lines", "Amount of main file lines that should be left before generated code block")
+parser:option("-p --position", "Amount of main file lines that should be left before generated code block")
 local args = parser:parse()
 
 local data_loader_temp =
@@ -55,9 +55,9 @@ local tail_of_main = helpers.read_file(helpers.find_in_includes(args.include, ar
 
 local length_of_head = 0
 if args.left_lines then
-    length_of_head = tonumber(args.left_lines)
+    length_of_head = tonumber(args.position)
     if not length_of_head then
-        error("invalid value of 'left-lines': number expected")
+        error("invalid value of 'position': number expected")
     end
 else
     if string.sub(tail_of_main, 1, 1) == '#' then
@@ -70,7 +70,7 @@ if length_of_head then
     for i = 1, length_of_head do
         prev, _ = string.find(tail_of_main, '\n', prev + 1)
         if not prev then
-            error("invalid value of 'left-lines': number of lines less than value of paramenter")
+            error("invalid value of 'position': number of lines less than value of paramenter")
         end
     end
     head_of_main = string.sub(tail_of_main, 1, prev)
@@ -80,17 +80,12 @@ end
 local files_table = { files = {} }
 for _, filename in ipairs(args.modules) do
     local path = helpers.find_in_includes(args.include, filename)
-    local raw_data = helpers.read_file(path)-- string.dump(loadfile(path))
-    --local data = ""
-    --for i = 1, #raw_data do
-    --    data = data .. string.byte(raw_data, i) .. ','
-    --end
-    --data = "{" .. data .. "}"
+    local data = helpers.read_file(path)
     table.insert(
         files_table.files,
         {
             filename = filename,
-            filedata = raw_data--data
+            filedata = data
         }
     )
 end
