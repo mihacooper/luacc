@@ -1,1 +1,0 @@
-return { name = "Module #1" }

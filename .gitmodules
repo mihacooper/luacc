@@ -1,3 +1,6 @@
 [submodule "src/argparse"]
 	path = src/argparse
 	url = https://github.com/mpeterv/argparse
+[submodule "src/templates"]
+	path = src/templates
+	url = https://github.com/bungle/lua-resty-template

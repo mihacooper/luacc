@@ -1,2 +1,2 @@
-# luacc
-Lua Combine &amp; Compile
+# LuaCC - Lua Code Combiner
+

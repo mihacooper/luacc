@@ -1,6 +1,6 @@
-local filesys = {}
+local helpers = {}
 
-function filesys.read_file(filename)
+function helpers.read_file(filename)
     local file, err = io.open(filename, "r")
     if file then
         local data = file:read("*a")
@@ -11,7 +11,7 @@ function filesys.read_file(filename)
     end
 end
 
-function filesys.write_file(filename, data)
+function helpers.write_file(filename, data)
     local file, err = io.open(filename, "w")
     if file then
         file:write(data)
@@ -20,7 +20,7 @@ function filesys.write_file(filename, data)
     end
 end
 
-function filesys.find_in_includes(includes, modulename)
+function helpers.find_in_includes(includes, modulename)
     local function check_path(p)
         local f = io.open(p)
         if f then
@@ -40,4 +40,4 @@ function filesys.find_in_includes(includes, modulename)
     error("Unable to find file: " .. '"' .. modulename .. '"')
 end
 
-return filesys
+return helpers

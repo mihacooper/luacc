@@ -1,27 +1,10 @@
 #!/usr/bin/lua
 
-stringex = require 'stringex'
-argparse = require 'argparse.src.argparse'
-filesys = require 'filesys'
+package.path = 'argparse/src/?.lua;templates/lib/resty/?.lua;' .. package.path
 
---[[
-print = function(...)
-    for _, v in pairs(...) do
-        if type(v) == type({}) then
-            io.write('{ ')
-            for key, val in pairs(v) do
-                io.write(key, ' = ')
-                print(val)
-            end
-            io.write(' }')
-        else
-            io.write(v)
-        end
-        io.write('\t')
-    end
-    io.write('\n')
-end
-]]
+argparse = require 'argparse'
+helpers = require 'helpers'
+templates = require 'template'
 
 local parser = argparse("luacc", "Lua Code Combine tool")
 parser:argument("main", "Main file of project")
@@ -37,24 +20,29 @@ local data_loader_temp =
 ----------------Auto generated code block----------------
 ---------------------------------------------------------
 
-(
-    function()
-        local origin_loader = package.loaders[2]
-        package.loaders[2] = function(path)
-            local files =
-            {
-                <|files|>    ["{{filename}}"] = "{{filedata}}",
-                <|files|>
-            }
-            if files[path] then
-                local loader, err = loadstring(files[path])
-                return loader or '\n\tUnable to load compiled module: ' .. err
-            else
-                origin_loader(path)
-            end
+(function()
+    local origin_loader = package.loaders[2]
+    package.loaders[2] = function(path)
+        local files =
+        {
+{% for _, file in ipairs(files) do %}
+            ["{*file.filename*}"] = function()
+                {*file.filedata*}
+                --local string_data = ""
+                --for _, i in ipairs(raw_data) do
+                --    string_data = string_data .. string.char(i)
+                --end
+                --return loadstring(raw_data)()
+            end,
+{% end %}
+        }
+        if files[path] then
+            return files[path]
+        else
+            return origin_loader(path)
         end
     end
-)()
+end)()
 
 ---------------------------------------------------------
 ----------------Auto generated code block----------------
@@ -63,7 +51,7 @@ local data_loader_temp =
 ]]
 
 local head_of_main = ''
-local tail_of_main = filesys.read_file(filesys.find_in_includes(args.include, args.main))
+local tail_of_main = helpers.read_file(helpers.find_in_includes(args.include, args.main))
 
 local length_of_head = 0
 if args.left_lines then
@@ -91,15 +79,31 @@ end
 
 local files_table = { files = {} }
 for _, filename in ipairs(args.modules) do
-    local path = filesys.find_in_includes(args.include, filename)
+    local path = helpers.find_in_includes(args.include, filename)
+    local raw_data = helpers.read_file(path)-- string.dump(loadfile(path))
+    --local data = ""
+    --for i = 1, #raw_data do
+    --    data = data .. string.byte(raw_data, i) .. ','
+    --end
+    --data = "{" .. data .. "}"
     table.insert(
         files_table.files,
         {
             filename = filename,
-            filedata = stringex.escape_slashes(filesys.read_file(path))
+            filedata = raw_data--data
         }
     )
 end
 
-local result_data = head_of_main .. stringex.instance_pattern(data_loader_temp, files_table) .. tail_of_main
-filesys.write_file(args.output, result_data)
+local render_res = ""
+templates.print = function(res)
+    render_res = res
+end
+
+if templates.render(data_loader_temp, files_table) then
+    print("Code generation error")
+    os.exit(1)
+end
+
+local result_data = head_of_main .. render_res .. tail_of_main
+helpers.write_file(args.output, result_data)
