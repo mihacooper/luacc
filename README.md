@@ -76,7 +76,7 @@ return { name = "My name is Module2" }
 ---
 To combine the files use the command below:
 ```bash
-$ lua luacc.lua -o myapp.lua -i /path/to/project -i /path/to/external/modules main module1 module2 
+$ lua luacc.lua -o myapp.lua -i /path/to/project -i /path/to/external/modules main subfolder.module1 module2 
 ```
 
 And now just execute the result script:
