@@ -3,13 +3,20 @@
 ----------------Auto generated code block----------------
 ---------------------------------------------------------
 
-(function()
+do
     local origin_loader = package.loaders[2]
     package.loaders[2] = function(path)
         local files =
         {
-            ["helpers"] = function()
-                local helpers = {}
+------------------------
+-- Modules part begin --
+------------------------
+
+["helpers"] = function()
+--------------------
+-- Module: 'helpers'
+--------------------
+local helpers = {}
 
 function helpers.read_file(filename)
     local file, err = io.open(filename, "r")
@@ -52,14 +59,13 @@ function helpers.find_in_includes(includes, modulename)
 end
 
 return helpers
-                --local string_data = ""
-                --for _, i in ipairs(raw_data) do
-                --    string_data = string_data .. string.char(i)
-                --end
-                --return loadstring(raw_data)()
-            end,
-            ["argparse"] = function()
-                -- The MIT License (MIT)
+end,
+
+["argparse"] = function()
+--------------------
+-- Module: 'argparse'
+--------------------
+-- The MIT License (MIT)
 
 -- Copyright (c) 2013 - 2015 Peter Melnichenko
 
@@ -1240,14 +1246,13 @@ return function(...)
    return Parser(default_cmdline[0]):add_help(true)(...)
 end
 
-                --local string_data = ""
-                --for _, i in ipairs(raw_data) do
-                --    string_data = string_data .. string.char(i)
-                --end
-                --return loadstring(raw_data)()
-            end,
-            ["template"] = function()
-                local setmetatable = setmetatable
+end,
+
+["template"] = function()
+--------------------
+-- Module: 'template'
+--------------------
+local setmetatable = setmetatable
 local loadstring = loadstring
 local loadchunk
 local tostring = tostring
@@ -1726,12 +1731,11 @@ end
 
 return template
 
-                --local string_data = ""
-                --for _, i in ipairs(raw_data) do
-                --    string_data = string_data .. string.char(i)
-                --end
-                --return loadstring(raw_data)()
-            end,
+end,
+
+----------------------
+-- Modules part end --
+----------------------
         }
         if files[path] then
             return files[path]
@@ -1739,8 +1743,7 @@ return template
             return origin_loader(path)
         end
     end
-end)()
-
+end
 ---------------------------------------------------------
 ----------------Auto generated code block----------------
 ---------------------------------------------------------
@@ -1766,21 +1769,27 @@ local data_loader_temp =
 ----------------Auto generated code block----------------
 ---------------------------------------------------------
 
-(function()
+do
     local origin_loader = package.loaders[2]
     package.loaders[2] = function(path)
         local files =
         {
+------------------------
+-- Modules part begin --
+------------------------
 {% for _, file in ipairs(files) do %}
-            ["{*file.filename*}"] = function()
-                {*file.filedata*}
-                --local string_data = ""
-                --for _, i in ipairs(raw_data) do
-                --    string_data = string_data .. string.char(i)
-                --end
-                --return loadstring(raw_data)()
-            end,
+
+["{*file.filename*}"] = function()
+--------------------
+-- Module: '{*file.filename*}'
+--------------------
+{*file.filedata*}
+end,
 {% end %}
+
+----------------------
+-- Modules part end --
+----------------------
         }
         if files[path] then
             return files[path]
@@ -1788,8 +1797,7 @@ local data_loader_temp =
             return origin_loader(path)
         end
     end
-end)()
-
+end
 ---------------------------------------------------------
 ----------------Auto generated code block----------------
 ---------------------------------------------------------
@@ -1801,9 +1809,9 @@ local tail_of_main = helpers.read_file(helpers.find_in_includes(args.include, ar
 
 local length_of_head = 0
 if args.left_lines then
-    length_of_head = tonumber(args.left_lines)
+    length_of_head = tonumber(args.position)
     if not length_of_head then
-        error("invalid value of 'left-lines': number expected")
+        error("invalid value of 'position': number expected")
     end
 else
     if string.sub(tail_of_main, 1, 1) == '#' then
@@ -1816,7 +1824,7 @@ if length_of_head then
     for i = 1, length_of_head do
         prev, _ = string.find(tail_of_main, '\n', prev + 1)
         if not prev then
-            error("invalid value of 'left-lines': number of lines less than value of paramenter")
+            error("invalid value of 'position': number of lines less than value of paramenter")
         end
     end
     head_of_main = string.sub(tail_of_main, 1, prev)
@@ -1826,17 +1834,12 @@ end
 local files_table = { files = {} }
 for _, filename in ipairs(args.modules) do
     local path = helpers.find_in_includes(args.include, filename)
-    local raw_data = helpers.read_file(path)-- string.dump(loadfile(path))
-    --local data = ""
-    --for i = 1, #raw_data do
-    --    data = data .. string.byte(raw_data, i) .. ','
-    --end
-    --data = "{" .. data .. "}"
+    local data = helpers.read_file(path)
     table.insert(
         files_table.files,
         {
             filename = filename,
-            filedata = raw_data--data
+            filedata = data
         }
     )
 end

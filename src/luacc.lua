@@ -20,21 +20,27 @@ local data_loader_temp =
 ----------------Auto generated code block----------------
 ---------------------------------------------------------
 
-(function()
+do
     local origin_loader = package.loaders[2]
     package.loaders[2] = function(path)
         local files =
         {
+------------------------
+-- Modules part begin --
+------------------------
 {% for _, file in ipairs(files) do %}
-            ["{*file.filename*}"] = function()
-                {*file.filedata*}
-                --local string_data = ""
-                --for _, i in ipairs(raw_data) do
-                --    string_data = string_data .. string.char(i)
-                --end
-                --return loadstring(raw_data)()
-            end,
+
+["{*file.filename*}"] = function()
+--------------------
+-- Module: '{*file.filename*}'
+--------------------
+{*file.filedata*}
+end,
 {% end %}
+
+----------------------
+-- Modules part end --
+----------------------
         }
         if files[path] then
             return files[path]
@@ -42,8 +48,7 @@ local data_loader_temp =
             return origin_loader(path)
         end
     end
-end)()
-
+end
 ---------------------------------------------------------
 ----------------Auto generated code block----------------
 ---------------------------------------------------------

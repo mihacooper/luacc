@@ -1,8 +1,8 @@
 package = "LuaCC"
-version = "1.0-0"
+version = "0.9-1"
 source = {
    url = "git://github.com/mihacooper/luacc",
-   tag = "v1.01"
+   tag = version
 }
 description = {
    summary = "Command line tool to combine Lua source files.",
