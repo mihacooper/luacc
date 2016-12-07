@@ -52,34 +52,35 @@ end
 ---------------------------------------------------------
 ----------------Auto generated code block----------------
 ---------------------------------------------------------
-
 ]]
 
-local head_of_main = ''
-local tail_of_main = helpers.read_file(helpers.find_in_includes(args.include, args.main))
-
-local length_of_head = 0
-if args.left_lines then
-    length_of_head = tonumber(args.position)
-    if not length_of_head then
-        error("invalid value of 'position': number expected")
-    end
-else
-    if string.sub(tail_of_main, 1, 1) == '#' then
-        length_of_head = 1
-    end
+local main_file_body = {}
+for line in io.lines(helpers.find_in_includes(args.include, args.main)) do
+    table.insert(main_file_body, line)
 end
 
-if length_of_head then
-    prev = 0
-    for i = 1, length_of_head do
-        prev, _ = string.find(tail_of_main, '\n', prev + 1)
-        if not prev then
-            error("invalid value of 'position': number of lines less than value of paramenter")
+local length_of_head = 0
+if not args.position then
+    if string.sub(main_file_body[1], 1, 2) == '#!' then
+        length_of_head = 1
+    end
+elseif tonumber(args.position) then
+    length_of_head = tonumber(args.position)
+    if length_of_head > #main_file_body then
+        error("invalid value of 'position': number of lines less than value of paramenter")
+    end
+else
+    local pattern = '--' .. args.position
+    for n, line in ipairs(main_file_body) do
+        if line == pattern then
+            length_of_head = n
         end
     end
-    head_of_main = string.sub(tail_of_main, 1, prev)
-    tail_of_main = string.sub(tail_of_main, prev + 1)
+    if length_of_head == 0 then
+            error("invalid value of 'position': unable to find pattern " .. "'" .. pattern .. "'")
+    end
+    table.remove(main_file_body, length_of_head)
+    length_of_head = length_of_head - 1
 end
 
 local files_table = { files = {} }
@@ -99,11 +100,8 @@ local render_res = ""
 templates.print = function(res)
     render_res = res
 end
+templates.render(data_loader_temp, files_table)
 
-if templates.render(data_loader_temp, files_table) then
-    print("Code generation error")
-    os.exit(1)
-end
-
-local result_data = head_of_main .. render_res .. tail_of_main
+local result_data = table.concat(main_file_body, "\n", 1, length_of_head) .. "\n"
+        .. render_res .. table.concat(main_file_body, "\n", length_of_head + 1)
 helpers.write_file(args.output, result_data)
