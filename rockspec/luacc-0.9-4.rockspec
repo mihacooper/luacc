@@ -1,5 +1,5 @@
 package = "LuaCC"
-version = "0.9-2"
+version = "0.9-4"
 source = {
    url = "git://github.com/mihacooper/luacc",
    tag = version
