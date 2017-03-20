@@ -4,8 +4,9 @@
 ---------------------------------------------------------
 
 do
-    local origin_loader = package.loaders[2]
-    package.loaders[2] = function(path)
+    local searchers = package.searchers or package.loaders
+    local origin_seacher = searchers[2]
+    searchers[2] = function(path)
         local files =
         {
 ------------------------
@@ -1740,7 +1741,7 @@ end,
         if files[path] then
             return files[path]
         else
-            return origin_loader(path)
+            return origin_seacher(path)
         end
     end
 end
@@ -1769,8 +1770,9 @@ local data_loader_temp =
 ---------------------------------------------------------
 
 do
-    local origin_loader = package.loaders[2]
-    package.loaders[2] = function(path)
+    local searchers = package.searchers or package.loaders
+    local origin_seacher = searchers[2]
+    searchers[2] = function(path)
         local files =
         {
 ------------------------
@@ -1793,7 +1795,7 @@ end,
         if files[path] then
             return files[path]
         else
-            return origin_loader(path)
+            return origin_seacher(path)
         end
     end
 end
