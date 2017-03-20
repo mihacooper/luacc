@@ -50,7 +50,7 @@ Let's show you example of project consists of main file `main.lua` and 2 modules
     |-module2.lua
 ```
 
-Below you can see the source code of these files:
+Below you can see the source code of these files:  
 **main.lua**
 ```lua
 print "Main module"
