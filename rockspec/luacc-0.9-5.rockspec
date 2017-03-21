@@ -1,5 +1,5 @@
 package = "LuaCC"
-version = "0.9-4"
+version = "0.9-5"
 source = {
    url = "git://github.com/mihacooper/luacc",
    tag = version
@@ -17,7 +17,10 @@ dependencies = {
 }
 build = {
    type = "builtin",
-   modules = {
-      luacc = "bin/luacc.lua",
+   modules = {},
+   install = {
+      bin = {
+         luacc = "bin/luacc.lua",
+      },
    },
 }
