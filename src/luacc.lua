@@ -1,4 +1,4 @@
-#!/usr/bin/lua
+#!/usr/bin/env lua
 
 package.path = 'argparse/src/?.lua;templates/lib/resty/?.lua;' .. package.path
 
