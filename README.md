@@ -4,7 +4,7 @@ LuaCC is a command line tool that allows you combine multiple Lua files into sin
 
 ## How it works?
 
-LuaCC principle is based on Lua [package.loaders](https://www.lua.org/manual/5.1/manual.html#pdf-package.loaders) approach. LuaCC obtain the *main* file of the application and any number of *additional Lua modules*. The *main* file is used as a base of result script (it's content is copied *as is*) and content of each *additional Lua module* is saved to result script as a function to special table with a key equals to the name of module.
+LuaCC principle is based on Lua [package.loaders](https://www.lua.org/manual/5.1/manual.html#pdf-package.loaders) (or [package.searchers](https://www.lua.org/manual/5.2/manual.html#pdf-package.searchers)) approach. LuaCC obtain the *main* file of the application and any number of *additional Lua modules*. The *main* file is used as a base of result script (it's content is copied *as is*) and content of each *additional Lua module* is saved to result script as a function to special table with a key equals to the name of module.
 
 After that the content of the modules embedded into the the table is loading using a special **internal loader** function. **Internal loader** replaces the default **package.loaders[2]** which actually searches for \*.lua modules using pathes from [package.path](http://lua-users.org/wiki/PackagePath). By default **internal loader** does not completely delete **package.loaders[2]**, firstly **internal loader** tries to find out the required module among the embedded modules and if it was not found **internal loader** will call the standard **package.loaders[2]** to load the module from filesystem. 
 
