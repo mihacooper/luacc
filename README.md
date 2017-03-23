@@ -1,6 +1,7 @@
 # LuaCC - Lua Code Combiner
 
-LuaCC is a command line tool that allows you combine multiple Lua files into single one without any changes of your source code.
+LuaCC is a command line tool that allows you combine multiple Lua files into single one without any changes of your source code. It's available on [luarocks](https://luarocks.org/modules/mihacooper/luacc).
+
 
 ## How it works?
 
