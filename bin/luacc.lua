@@ -55,6 +55,10 @@ function helpers.find_in_includes(includes, modulename)
         if check_path(abs_path) then
             return abs_path
         end
+        abs_path = include .. '/' .. path .. '/init.lua'
+        if check_path(abs_path) then
+            return abs_path
+        end
     end
     error("Unable to find file: " .. '"' .. modulename .. '"')
 end
