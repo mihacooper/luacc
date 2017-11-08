@@ -33,7 +33,7 @@ luacc -o <output> [-i <include>] [-p <position>] <main> [modules] ...
       _Note_: the specified name should be the same as you use in your require("") functions 
   * __include__ - additional search paths for _main_ file and _modules_  
       _Example_: `luacc ... -i /one/path/to/folder/with/modules -i /another/path/to/folder/with/modules` 
-      _Note_: LuaCC uses includes in the same way as [package.path](http://lua-users.org/wiki/PackagePath). Firstly it tries to find out the module using the current path and if it's not found LuaCC searches the module using each include path in specified order
+      _Note_: LuaCC uses includes in the same way as [package.path](http://lua-users.org/wiki/PackagePath). Firstly it tries to find out the module using the current path, then if it's not found LuaCC searches the module using each include path in specified order, as if `package.path` contained `/the/include/path/?.lua;/the/include/path/?/init.lua`.
 
 ### Example
 Let's show you example of project consists of main file `main.lua` and 2 modules: `module1.lua` and `module2.lua`
